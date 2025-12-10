@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const { getAllMeds, createMed, getMedById, updateMedById, skipMedById, deleteMedById, adjustInventory } = require("./medsController");
+const medsController = require("./medsController");
+const { getAllMeds, createMed, getMedById, updateMedById, deleteMedById } = require("./medsController");
 const { signUp, login } = require("./authController");
 const { createProfile, getProfiles, getProfileById, updateProfile, deleteProfile } = require("./profileController");
 const { createReminder, listReminders, dismissReminder, markDue } = require("./reminderController");
@@ -44,6 +45,7 @@ router.post("/reminders/:id/dismiss", auth, dismissReminder);
 router.post("/reminders/:id/mark-due", auth, markDue); // useful for manual testing
 
 
+router.patch("/meds/:id/inventory", medsController.adjustInventory);
 
 
 
