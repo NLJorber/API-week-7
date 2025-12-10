@@ -20,10 +20,10 @@ exports.createMed = async (req, res) => {
     
     const newMed = await Med.create({ 
         name,
-      dosage,
-      timeToTake,
-      frequency,
-      notes 
+        dosage,
+        timeToTake,
+        frequency,
+        notes 
     });
     await newMed.save();
 
@@ -79,3 +79,15 @@ exports.updateMedById = async (req, res) => {
         res.status(500).send({ message: "Error updating medication", error })
     }
 };
+    exports.deleteMedById = async (req, res) => {
+     try {
+        const med = await Med.findByIdAndDelete(req.params.id);
+        if (!med) return res.status(404).send({message: "Medication not found"});
+        res.send({message: "Medication has been deleted"});
+     }  catch (error) {
+        res.status(500).send({ message: "Error deleting", error});
+     }
+
+
+
+    };

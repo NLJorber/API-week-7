@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 
 const MedSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  profileId: { type: mongoose.Schema.Types.ObjectId, ref: "Profile", required: true },
   name: { type: String, required: true },
   dosage: { type: String, required: true },
   timeToTake: { type: String, required: true }, // e.g. "08:00 AM"
