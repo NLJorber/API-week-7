@@ -11,9 +11,13 @@ exports.signUp = async (req, res) => {
       return res.status(400).send({ message: 'Missing required fields' });
     }
     const passwordHash = await bcrypt.hash(password, 10);
-    await User.create({ email, password: passwordHash, name });
+    await User.create({ email, passwordHash, name });
     res.send ({message: "Welcome!!"});
   } catch (error) {
+    console.error("Error during signup:", error);
+    if (error.code === 11000) {
+      return res.status(409).send({ message: "Email already registered" });
+    }
     res.status(500).send({ message: 'Sorry something happened try again' });
   }
 };

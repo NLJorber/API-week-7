@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const { getAllMeds, createMed, getMedById, updateMedById, deleteMedById } = require("./medsController");
+const { getAllMeds, createMed, getMedById, updateMedById, skipMedById, deleteMedById } = require("./medsController");
 const { signUp, login } = require("./authController");
 const { createProfile, getProfiles, getProfileById, updateProfile, deleteProfile } = require("./profileController");
+const { createReminder, listReminders, dismissReminder, markDue } = require("./reminderController");
 const auth = require("./authMiddleware");
 
 //base url lh 3001
@@ -18,6 +19,9 @@ router.post("/", auth, createMed)
 //update specific med by ID
 router.put("/:id", auth, updateMedById)
 
+//mark dose as skipped
+router.post("/:id/skip", auth, skipMedById)
+
 //This deletes a med by ID
 router.delete("/:id", auth, deleteMedById);
 
@@ -31,6 +35,12 @@ router.get("/profiles", auth, getProfiles);
 router.get("/profiles/:id", auth, getProfileById);
 router.put("/profiles/:id", auth, updateProfile);
 router.delete("/profiles/:id", auth, deleteProfile);
+
+//Reminders
+router.post("/reminders", auth, createReminder);
+router.get("/reminders", auth, listReminders);
+router.post("/reminders/:id/dismiss", auth, dismissReminder);
+router.post("/reminders/:id/mark-due", auth, markDue); // useful for manual testing
 
 
 

@@ -16,20 +16,21 @@ exports.getAllMeds = async (req, res) => {
 
 exports.createMed = async (req, res) => {
     try {
-    const { name, dosage, timeToTake, frequency, notes } = req.body;
+    const { name, dosage, timeToTake, frequency, notes, profileId } = req.body;
     
     const newMed = await Med.create({ 
+        userId: req.userId,
+        profileId,
         name,
         dosage,
         timeToTake,
         frequency,
         notes 
     });
-    await newMed.save();
 
-    res.send({ message: "Medication created successfully" });
+    res.send({ message: "Medication created successfully", med: newMed });
   } catch (error) {
-    res.status(500).send({ message: "Error creating medication", error });
+    res.status(500).send({ message: "Error creating medication", error: error.message });
   }
 };
 
@@ -79,15 +80,30 @@ exports.updateMedById = async (req, res) => {
         res.status(500).send({ message: "Error updating medication", error })
     }
 };
-    exports.deleteMedById = async (req, res) => {
-     try {
-        const med = await Med.findByIdAndDelete(req.params.id);
-        if (!med) return res.status(404).send({message: "Medication not found"});
-        res.send({message: "Medication has been deleted"});
-     }  catch (error) {
-        res.status(500).send({ message: "Error deleting", error});
-     }
+exports.skipMedById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { reason } = req.body || {};
+        const med = await Med.findByIdAndUpdate(
+            id,
+            { taken: false, lastSkippedAt: new Date(), skipReason: reason },
+            { new: true }
+        );
+        if (!med) {
+            return res.status(404).send({ message: "Medication not found" });
+        }
+        res.send({ message: "Dose marked as skipped", med });
+    } catch (error) {
+        res.status(500).send({ message: "Error skipping dose", error });
+    }
+};
 
-
-
-    };
+exports.deleteMedById = async (req, res) => {
+  try {
+    const med = await Med.findByIdAndDelete(req.params.id);
+    if (!med) return res.status(404).send({message: "Medication not found"});
+    res.send({message: "Medication has been deleted"});
+  }  catch (error) {
+    res.status(500).send({ message: "Error deleting", error});
+  }
+};
