@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { getAllMeds, createMed, getMedById, updateMedById, skipMedById, deleteMedById } = require("./medsController");
+const { getAllMeds, createMed, getMedById, updateMedById, skipMedById, deleteMedById, adjustInventory } = require("./medsController");
 const { signUp, login } = require("./authController");
 const { createProfile, getProfiles, getProfileById, updateProfile, deleteProfile } = require("./profileController");
 const { createReminder, listReminders, dismissReminder, markDue } = require("./reminderController");
@@ -24,6 +24,7 @@ router.post("/:id/skip", auth, skipMedById)
 
 //This deletes a med by ID
 router.delete("/:id", auth, deleteMedById);
+router.patch("/meds/:id/inventory", auth, adjustInventory);
 
 //This to authenticate user
 router.post("/auth/signup", signUp);

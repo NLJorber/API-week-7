@@ -10,7 +10,9 @@ const MedSchema = new mongoose.Schema({
   taken: { type: Boolean, default: false },
   lastSkippedAt: { type: Date },
   skipReason: { type: String },
-  notes: { type: String }
+  notes: { type: String },
+  quantity: { type: Number, default: 0 },
+  lowStockThreshold: { type: Number, default: 0 }
 });
 
 module.exports = mongoose.model("Med", MedSchema)
