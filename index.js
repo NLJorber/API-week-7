@@ -16,8 +16,8 @@ console.log("Connected to MongoDB");
 const app = express();
 
 app.use(express.json()); // allows us to read the JSON body of requests
-
-
+// simple static frontend available at /app
+app.use("/app", express.static("public"));
 
 app.use("/", routes)
 

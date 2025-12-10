@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Medication Manager</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111827;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-strong: #0ea5e9;
+      --danger: #ef4444;
+      --success: #22c55e;
+      --border: #1f2937;
+      --card: #0b1220;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background: radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.08), transparent 25%),
+                  radial-gradient(circle at 80% 0%, rgba(14, 165, 233, 0.08), transparent 20%),
+                  var(--bg);
+      color: #e5e7eb;
+      padding: 24px;
+    }
+    h1, h2, h3 { margin: 0 0 8px; }
+    h1 { font-size: 28px; }
+    h2 { font-size: 22px; }
+    h3 { font-size: 18px; color: var(--muted); }
+    a { color: var(--accent); }
+    .grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    }
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+    }
+    label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 4px; }
+    input, textarea, select, button {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: #e5e7eb;
+      font-size: 14px;
+    }
+    input:focus, textarea:focus, select:focus { outline: 1px solid var(--accent); }
+    button {
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      border: none;
+      font-weight: 600;
+      transition: transform 0.05s ease, filter 0.15s ease;
+    }
+    button:hover { filter: brightness(1.05); }
+    button:active { transform: translateY(1px); }
+    .btn-ghost { background: transparent; border: 1px solid var(--border); }
+    .stack { display: flex; gap: 8px; flex-wrap: wrap; }
+    .stack button { width: auto; padding: 8px 12px; }
+    .status {
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: rgba(56,189,248,0.08);
+      color: #bae6fd;
+      font-size: 14px;
+    }
+    .status.danger { background: rgba(239,68,68,0.1); color: #fecdd3; }
+    .status.success { background: rgba(34,197,94,0.1); color: #bbf7d0; }
+    .card {
+      border: 1px solid var(--border);
+      background: var(--card);
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+    .card-header { display: flex; justify-content: space-between; align-items: center; }
+    .pill {
+      display: inline-flex;
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+    .pill.low { color: #fca5a5; border-color: rgba(239,68,68,0.4); }
+    .pill.due { color: #fde68a; border-color: rgba(234,179,8,0.4); }
+    .actions { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+    .actions button { width: auto; padding: 6px 10px; font-size: 12px; }
+    .small-input { width: 120px; }
+    .muted { color: var(--muted); font-size: 13px; }
+    form { display: grid; gap: 10px; }
+    .two-col { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    @media (max-width: 700px) {
+      .two-col { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header style="margin-bottom:18px;">
+    <h1>Medication Manager</h1>
+    <h3>Test the API with a tiny UI. Use /auth/login first.</h3>
+    <div id="auth-status" class="status">Not authenticated</div>
+  </header>
+
+  <div class="grid">
+    <section class="panel">
+      <h2>Auth</h2>
+      <form id="login-form">
+        <div class="two-col">
+          <div>
+            <label for="login-email">Email</label>
+            <input id="login-email" type="email" placeholder="you@example.com" required />
+          </div>
+          <div>
+            <label for="login-password">Password</label>
+            <input id="login-password" type="password" placeholder="password" required />
+          </div>
+        </div>
+        <div class="stack">
+          <button type="submit">Login</button>
+          <button type="button" class="btn-ghost" id="signup-btn">Quick Sign Up</button>
+          <button type="button" class="btn-ghost" id="logout-btn">Logout</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="panel">
+      <h2>Create / Update Med</h2>
+      <form id="med-form">
+        <label for="med-id">Med ID (leave blank to create)</label>
+        <input id="med-id" type="text" placeholder="Existing ID to update" />
+        <div class="two-col">
+          <div>
+            <label for="med-name">Name</label>
+            <input id="med-name" required />
+          </div>
+          <div>
+            <label for="med-dosage">Dosage</label>
+            <input id="med-dosage" required />
+          </div>
+        </div>
+        <div class="two-col">
+          <div>
+            <label for="med-time">Time To Take</label>
+            <input id="med-time" placeholder="08:00 AM" required />
+          </div>
+          <div>
+            <label for="med-frequency">Frequency</label>
+            <input id="med-frequency" placeholder="Daily" required />
+          </div>
+        </div>
+        <div class="two-col">
+          <div>
+            <label for="med-profile">Profile ID (optional)</label>
+            <input id="med-profile" placeholder="Profile ObjectId" />
+          </div>
+          <div>
+            <label for="med-quantity">Quantity</label>
+            <input id="med-quantity" type="number" value="0" />
+          </div>
+        </div>
+        <div class="two-col">
+          <div>
+            <label for="med-threshold">Low Stock Threshold</label>
+            <input id="med-threshold" type="number" value="0" />
+          </div>
+          <div>
+            <label for="med-notes">Notes</label>
+            <input id="med-notes" placeholder="Optional notes" />
+          </div>
+        </div>
+        <button type="submit">Save Med</button>
+      </form>
+    </section>
+
+    <section class="panel">
+      <div style="display:flex; align-items:center; justify-content:space-between;">
+        <h2>Reminders</h2>
+        <button type="button" id="refresh-reminders" class="btn-ghost" style="width:auto;">Refresh</button>
+      </div>
+      <form id="reminder-form">
+        <div class="two-col">
+          <div>
+            <label for="reminder-message">Message</label>
+            <input id="reminder-message" required />
+          </div>
+          <div>
+            <label for="reminder-med">Med ID (optional)</label>
+            <input id="reminder-med" placeholder="Link to medication" />
+          </div>
+        </div>
+        <label for="reminder-due">Due At</label>
+        <input id="reminder-due" type="datetime-local" required />
+        <button type="submit">Create Reminder</button>
+      </form>
+      <div id="reminders-list" style="margin-top:12px;"></div>
+    </section>
+  </div>
+
+  <section class="panel" style="margin-top:16px;">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
+      <h2>Medications</h2>
+      <div class="stack">
+        <button type="button" class="btn-ghost" id="load-meds">Load Meds</button>
+      </div>
+    </div>
+    <div id="meds-list"></div>
+  </section>
+
+  <div id="messages" style="margin-top:12px;"></div>
+
+  <script>
+    const messagesEl = document.getElementById("messages");
+    const authStatusEl = document.getElementById("auth-status");
+    let token = localStorage.getItem("token") || "";
+
+    function setMessage(text, type = "") {
+      const el = document.createElement("div");
+      el.className = "status " + (type || "");
+      el.textContent = text;
+      messagesEl.prepend(el);
+      setTimeout(() => el.remove(), 6000);
+    }
+
+    function updateAuthStatus() {
+      if (token) {
+        authStatusEl.textContent = "Authenticated";
+        authStatusEl.className = "status success";
+      } else {
+        authStatusEl.textContent = "Not authenticated";
+        authStatusEl.className = "status";
+      }
+    }
+
+    updateAuthStatus();
+
+    async function api(path, { method = "GET", body, headers = {} } = {}) {
+      const opts = { method, headers: { ...headers } };
+      if (body !== undefined) {
+        opts.body = typeof body === "string" ? body : JSON.stringify(body);
+        opts.headers["Content-Type"] = "application/json";
+      }
+      if (token) {
+        opts.headers["Authorization"] = "Bearer " + token;
+      }
+      const res = await fetch(path, opts);
+      const text = await res.text();
+      let data = {};
+      if (text) {
+        try { data = JSON.parse(text); } catch (_) { data = { raw: text }; }
+      }
+      if (!res.ok) {
+        throw new Error(data.message || res.statusText);
+      }
+      return data;
+    }
+
+    // Auth
+    document.getElementById("login-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("login-email").value;
+      const password = document.getElementById("login-password").value;
+      try {
+        const data = await api("/auth/login", { method: "POST", body: { email, password } });
+        token = data.token;
+        localStorage.setItem("token", token);
+        updateAuthStatus();
+        setMessage("Logged in", "success");
+        loadMeds();
+        loadReminders();
+      } catch (error) {
+        setMessage(error.message, "danger");
+      }
+    });
+
+    document.getElementById("signup-btn").addEventListener("click", async () => {
+      const email = document.getElementById("login-email").value;
+      const password = document.getElementById("login-password").value || "password123";
+      const name = email.split("@")[0] || "User";
+      try {
+        await api("/auth/signup", { method: "POST", body: { email, password, name } });
+        setMessage("Signup success, now log in.", "success");
+      } catch (error) {
+        setMessage(error.message, "danger");
+      }
+    });
+
+    document.getElementById("logout-btn").addEventListener("click", () => {
+      token = "";
+      localStorage.removeItem("token");
+      updateAuthStatus();
+      setMessage("Logged out");
+    });
+
+    // Med create/update
+    document.getElementById("med-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const id = document.getElementById("med-id").value.trim();
+      const body = {
+        name: document.getElementById("med-name").value,
+        dosage: document.getElementById("med-dosage").value,
+        timeToTake: document.getElementById("med-time").value,
+        frequency: document.getElementById("med-frequency").value,
+        notes: document.getElementById("med-notes").value,
+        profileId: document.getElementById("med-profile").value || undefined,
+        quantity: Number(document.getElementById("med-quantity").value || 0),
+        lowStockThreshold: Number(document.getElementById("med-threshold").value || 0),
+      };
+      try {
+        if (id) {
+          await api(`/${id}`, { method: "PUT", body });
+          setMessage("Medication updated", "success");
+        } else {
+          await api("/", { method: "POST", body });
+          setMessage("Medication created", "success");
+        }
+        loadMeds();
+      } catch (error) {
+        setMessage(error.message, "danger");
+      }
+    });
+
+    // Load meds
+    document.getElementById("load-meds").addEventListener("click", () => loadMeds());
+
+    async function loadMeds() {
+      try {
+        const meds = await api("/");
+        renderMeds(meds);
+      } catch (error) {
+        setMessage(error.message, "danger");
+      }
+    }
+
+    function renderMeds(meds) {
+      const container = document.getElementById("meds-list");
+      if (!Array.isArray(meds) || meds.length === 0) {
+        container.innerHTML = '<div class="muted">No meds found</div>';
+        return;
+      }
+      container.innerHTML = "";
+      meds.forEach((med) => {
+        const card = document.createElement("div");
+        card.className = "card";
+        const low = med.quantity !== undefined && med.lowStockThreshold !== undefined && med.quantity <= med.lowStockThreshold;
+        card.innerHTML = `
+          <div class="card-header">
+            <div>
+              <strong>${med.name}</strong>
+              <div class="muted">${med.dosage} • ${med.frequency} • ${med.timeToTake}</div>
+            </div>
+            <span class="pill ${low ? "low" : ""}">Qty: ${med.quantity ?? 0}</span>
+          </div>
+          <div class="muted" style="margin-top:6px;">${med.notes || ""}</div>
+          <div class="muted" style="margin-top:4px;">Profile: ${med.profileId || "n/a"}</div>
+          <div class="muted" style="margin-top:4px;">Last skipped: ${med.lastSkippedAt ? new Date(med.lastSkippedAt).toLocaleString() : "never"}</div>
+          <div class="actions">
+            <button data-action="skip" data-id="${med._id}">Skip dose</button>
+            <button data-action="delete" data-id="${med._id}" class="btn-ghost" style="border-color: rgba(239,68,68,0.5); color:#fecdd3;">Delete</button>
+            <div class="stack" style="align-items:center;">
+              <input data-id="${med._id}" data-role="inventory-amount" class="small-input" type="number" placeholder="+/- qty" />
+              <button data-action="inventory" data-id="${med._id}">Adjust Inventory</button>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+
+      container.querySelectorAll("button[data-action]").forEach((btn) => {
+        btn.addEventListener("click", async () => {
+          const id = btn.getAttribute("data-id");
+          const action = btn.getAttribute("data-action");
+          try {
+            if (action === "delete") {
+              await api(`/${id}`, { method: "DELETE" });
+              setMessage("Deleted", "success");
+            } else if (action === "skip") {
+              await api(`/${id}/skip`, { method: "POST", body: { reason: "manual skip" } });
+              setMessage("Marked skipped", "success");
+            } else if (action === "inventory") {
+              const input = container.querySelector(`input[data-role="inventory-amount"][data-id="${id}"]`);
+              const amount = Number(input.value);
+              if (Number.isNaN(amount)) return setMessage("Enter a number for inventory", "danger");
+              await api(`/meds/${id}/inventory`, { method: "PATCH", body: { amount } });
+              setMessage("Inventory updated", "success");
+            }
+            loadMeds();
+          } catch (error) {
+            setMessage(error.message, "danger");
+          }
+        });
+      });
+    }
+
+    // Reminders
+    document.getElementById("reminder-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const dueRaw = document.getElementById("reminder-due").value;
+      const dueAt = dueRaw ? new Date(dueRaw).toISOString() : null;
+      const body = {
+        message: document.getElementById("reminder-message").value,
+        medId: document.getElementById("reminder-med").value || undefined,
+        dueAt
+      };
+      try {
+        await api("/reminders", { method: "POST", body });
+        setMessage("Reminder created", "success");
+        loadReminders();
+      } catch (error) {
+        setMessage(error.message, "danger");
+      }
+    });
+
+    document.getElementById("refresh-reminders").addEventListener("click", loadReminders);
+
+    async function loadReminders() {
+      try {
+        const reminders = await api("/reminders");
+        renderReminders(reminders);
+      } catch (error) {
+        setMessage(error.message, "danger");
+      }
+    }
+
+    function renderReminders(reminders) {
+      const container = document.getElementById("reminders-list");
+      if (!Array.isArray(reminders) || reminders.length === 0) {
+        container.innerHTML = '<div class="muted">No reminders</div>';
+        return;
+      }
+      container.innerHTML = "";
+      reminders.forEach((rem) => {
+        const card = document.createElement("div");
+        card.className = "card";
+        const due = rem.status === "due";
+        card.innerHTML = `
+          <div class="card-header">
+            <div>
+              <strong>${rem.message}</strong>
+              <div class="muted">Due: ${new Date(rem.dueAt).toLocaleString()}</div>
+            </div>
+            <span class="pill ${due ? "due" : ""}">${rem.status}</span>
+          </div>
+          <div class="muted" style="margin-top:6px;">Med: ${rem.medId || "n/a"}</div>
+          <div class="actions">
+            <button data-action="dismiss" data-id="${rem._id}">Dismiss</button>
+            <button data-action="mark-due" data-id="${rem._id}" class="btn-ghost">Mark Due</button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+
+      container.querySelectorAll("button[data-action]").forEach((btn) => {
+        btn.addEventListener("click", async () => {
+          const id = btn.getAttribute("data-id");
+          const action = btn.getAttribute("data-action");
+          try {
+            if (action === "dismiss") {
+              await api(`/reminders/${id}/dismiss`, { method: "POST" });
+            } else if (action === "mark-due") {
+              await api(`/reminders/${id}/mark-due`, { method: "POST" });
+            }
+            loadReminders();
+          } catch (error) {
+            setMessage(error.message, "danger");
+          }
+        });
+      });
+    }
+
+    // Auto load if token present
+    if (token) {
+      loadMeds();
+      loadReminders();
+    }
+  </script>
+</body>
+</html>
