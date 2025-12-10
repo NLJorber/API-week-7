@@ -8,7 +8,9 @@ const MedSchema = new mongoose.Schema({
   timeToTake: { type: String, required: true }, // e.g. "08:00 AM"
   frequency: { type: String, required: true }, // e.g. "Daily", "2x/day"
   taken: { type: Boolean, default: false },
-  notes: { type: String }
+  notes: { type: String },
+  quantity: { type: Number, default: 0},
+  lowStockThreshold: { type: Number, default: 0 }
 });
 
 module.exports = mongoose.model("Med", MedSchema)
