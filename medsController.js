@@ -16,14 +16,16 @@ exports.getAllMeds = async (req, res) => {
 
 exports.createMed = async (req, res) => {
     try {
-    const { name, dosage, timeToTake, frequency, notes } = req.body;
+    const { name, dosage, timeToTake, frequency, notes, quantity, lowStockThreshold } = req.body;
     
     const newMed = await Med.create({ 
         name,
         dosage,
         timeToTake,
         frequency,
-        notes 
+        notes,
+        quantity,
+        lowStockThreshold
     });
     await newMed.save();
 
@@ -57,7 +59,9 @@ exports.updateMedById = async (req, res) => {
         dosage,
         timeToTake,
         frequency,
-        notes 
+        notes,
+        quantity,
+        lowStockThreshold
     } = req.body;
 
     const updatedMed = await Med.findByIdAndUpdate(id, 
@@ -66,7 +70,9 @@ exports.updateMedById = async (req, res) => {
         dosage,
         timeToTake,
         frequency,
-        notes 
+        notes,
+        quantity,
+        lowStockThreshold
         }, 
         { new: true }
     );
@@ -85,9 +91,27 @@ exports.updateMedById = async (req, res) => {
         if (!med) return res.status(404).send({message: "Medication not found"});
         res.send({message: "Medication has been deleted"});
      }  catch (error) {
-        res.status(500).send({ message: "Error deleting", error});
+        res.status(500).send({ message: "Error deleting", error })
      }
+};
 
+    exports.adjustInventory = async (req, res) => {
+        try {
+            const { id } = req.params;
+            const { amount } = req.body;
 
+            const med = await Med.findById(id);
+            if(!med) return res.status(404).send({ message: "Medication not found" });
 
-    };
+            med.quantity += amount;
+            await med.save();
+
+            res.send({
+                message: "Inventory updated",
+                quantity: med.quantity,
+                lowStock: med.quantity <= med.lowStockThreshold
+            });
+        } catch (error) {
+            res.status(500).send({ message: "Error adjusting inventory", error });
+        }
+    }

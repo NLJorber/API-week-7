@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const medsController = require("./medsController");
 const { getAllMeds, createMed, getMedById, updateMedById, deleteMedById } = require("./medsController");
 const { signUp, login } = require("./authController");
 const { createProfile, getProfiles, getProfileById, updateProfile, deleteProfile } = require("./profileController");
@@ -32,7 +33,7 @@ router.get("/profiles/:id", auth, getProfileById);
 router.put("/profiles/:id", auth, updateProfile);
 router.delete("/profiles/:id", auth, deleteProfile);
 
-
+router.patch("/meds/:id/inventory", medsController.adjustInventory);
 
 
 
