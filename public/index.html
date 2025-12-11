@@ -131,5 +131,22 @@
   <div id="messages" class="mt-3 space-y-2"></div>
 
   <script src="app.js"></script>
+
+  <script type="module">
+
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js'
+    import { getFirestore } from 'https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js'
+    const firebaseConfig = {
+      apiKey: "AIzaSyCLwTnSjYrLVhHzGE8Sa7XwoZbGeCzcdTE",
+  authDomain: "medapp-45d1b.firebaseapp.com",
+  projectId: "medapp-45d1b",
+  storageBucket: "medapp-45d1b.firebasestorage.app",
+  messagingSenderId: "525567679658",
+  appId: "1:525567679658:web:ffa934b21659123c9a04d3",
+  measurementId: "G-FY5Q0W8GNB"
+    };
+    const app = initializeApp(firebaseConfig);
+    const storage = getStorage(app);
+  </script>
 </body>
 </html>

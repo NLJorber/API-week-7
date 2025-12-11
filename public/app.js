@@ -164,10 +164,20 @@ function renderMeds(meds) {
       <div class="text-xs text-slate-500 mt-1">Profile: ${med.profileId || "n/a"}</div>
       <div class="text-xs text-slate-500 mt-1">Last skipped: ${med.lastSkippedAt ? new Date(med.lastSkippedAt).toLocaleString() : "never"}</div>
       <div class="flex flex-wrap items-center gap-2 mt-3">
+
+      <button data-action="taken" data-id="${med._id}"
+      class="rounded-lg bg-emerald-500/90 px-3 py-1.5 text-xs font-semibold text-slate-950 hover:opacity-90">
+      Taken
+    </button>
+
+
         <button data-action="skip" data-id="${med._id}" class="rounded-lg bg-brand-500/90 px-3 py-1.5 text-xs font-semibold text-slate-950 hover:opacity-90">Skip dose</button>
+        
         <button data-action="delete" data-id="${med._id}" class="rounded-lg border border-red-500/50 px-3 py-1.5 text-xs text-red-100 hover:bg-red-500/10">Delete</button>
+        
         <div class="flex items-center gap-2">
           <input data-id="${med._id}" data-role="inventory-amount" class="w-24 rounded-lg border border-slate-800 bg-slate-900 px-2 py-1 text-xs" type="number" placeholder="+/- qty" />
+          
           <button data-action="inventory" data-id="${med._id}" class="rounded-lg border border-slate-800 px-3 py-1.5 text-xs text-slate-200 hover:border-brand-400">Add</button>
         </div>
       </div>
@@ -192,6 +202,9 @@ function renderMeds(meds) {
           if (Number.isNaN(amount)) return setMessage("Enter a number for inventory", "danger");
           await api(`/meds/${id}/inventory`, { method: "PATCH", body: { amount } });
           setMessage("Inventory updated", "success");
+        } else if (action === "taken") {
+        await api(`/meds/${id}/taken`, { method: "POST" });
+        setMessage("Marked taken", "success");
         }
         loadMeds();
       } catch (error) {
