@@ -23,7 +23,7 @@ router.put("/:id", auth, updateMedById)
 router.post("/:id/skip", auth, skipMedById)
 
 //mark med as taken
-router.post("/meds:id/taken", markMedicationTaken)
+router.post("/meds/:id/taken", markMedicationTaken)
 
 //This deletes a med by ID
 router.delete("/:id", auth, deleteMedById);
