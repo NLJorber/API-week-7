@@ -16,18 +16,19 @@ exports.getAllMeds = async (req, res) => {
 
 exports.createMed = async (req, res) => {
     try {
-    const { name, dosage, timeToTake, frequency, notes, quantity, lowStockThreshold } = req.body;
+    const { name, dosage, dosageAmount, dosageUnit, timeToTake, frequency, notes, profileId, quantity } = req.body;
     
     const newMed = await Med.create({ 
         userId: req.userId,
         profileId,
         name,
         dosage,
+        dosageAmount,
+        dosageUnit,
         timeToTake,
         frequency,
         notes,
-        quantity,
-        lowStockThreshold
+        quantity
     });
 
     res.send({ message: "Medication created successfully", med: newMed });
@@ -58,6 +59,8 @@ exports.updateMedById = async (req, res) => {
     { 
         name,
         dosage,
+        dosageAmount,
+        dosageUnit,
         timeToTake,
         frequency,
         notes,
@@ -70,6 +73,8 @@ exports.updateMedById = async (req, res) => {
         { 
         name,
         dosage,
+        dosageAmount,
+        dosageUnit,
         timeToTake,
         frequency,
         notes,
@@ -103,6 +108,26 @@ exports.skipMedById = async (req, res) => {
     } catch (error) {
         res.status(500).send({ message: "Error skipping dose", error });
     }
+};
+
+exports.markMedicationTaken = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const med = await Med.findOneAndUpdate(
+      { _id: id, userId: req.userId },
+      { lastTakenAt: new Date(), taken: true },
+      { new: true }
+    );
+
+    if (!med) {
+      return res.status(404).send({ message: "Medication not found" });
+    }
+
+    res.send({ message: "Medication marked as taken", med });
+  } catch (error) {
+    res.status(500).send({ message: "Error marking dose as taken", error });
+  }
 };
 
 exports.deleteMedById = async (req, res) => {

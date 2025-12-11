@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const medsController = require("./medsController");
-const { getAllMeds, createMed, getMedById, updateMedById, deleteMedById } = require("./medsController");
+const { getAllMeds, createMed, getMedById, updateMedById, skipMedById, markMedicationTaken, deleteMedById, adjustInventory } = require("./medsController");
 const { signUp, login } = require("./authController");
 const { createProfile, getProfiles, getProfileById, updateProfile, deleteProfile } = require("./profileController");
 const { createReminder, listReminders, dismissReminder, markDue } = require("./reminderController");
@@ -24,6 +23,9 @@ router.put("/:id", auth, updateMedById)
 //mark dose as skipped
 router.post("/:id/skip", auth, skipMedById)
 
+//mark med as taken
+router.post("/meds:id/taken", markMedicationTaken)
+
 //This deletes a med by ID
 router.delete("/:id", auth, deleteMedById);
 router.patch("/meds/:id/inventory", auth, adjustInventory);
@@ -44,16 +46,5 @@ router.post("/reminders", auth, createReminder);
 router.get("/reminders", auth, listReminders);
 router.post("/reminders/:id/dismiss", auth, dismissReminder);
 router.post("/reminders/:id/mark-due", auth, markDue); // useful for manual testing
-
-// Events
-router.get("/events", auth, eventController.getEvents);
-router.post("/events", auth, eventController.createEvent);
-router.put("/events/:id", auth, eventController.updateEvent);
-router.delete("/events/:id", auth, eventController.deleteEvent);
-
-
-router.patch("/meds/:id/inventory", medsController.adjustInventory);
-
-
 
 module.exports = router;
