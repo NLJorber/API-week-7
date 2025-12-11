@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Medication Manager</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              400: '#38bdf8',
+              500: '#0ea5e9',
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="min-h-screen bg-slate-950 text-slate-100 px-6 py-6">
+  <header class="mb-4 space-y-1">
+    <h1 class="text-2xl font-semibold">Medication Manager</h1>
+    <h3 class="text-sm text-slate-400">Test the API with a tiny UI. Use /auth/login first.</h3>
+    <div id="auth-status" class="rounded-lg border border-slate-800 bg-slate-900 px-3 py-2 text-sm">Not authenticated</div>
+  </header>
+
+  <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+    <section class="rounded-xl border border-slate-800 bg-slate-900/80 p-4 shadow-xl shadow-black/40">
+      <h2 class="text-lg font-semibold mb-2">Auth</h2>
+      <form id="login-form" class="space-y-3">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <label class="text-sm text-slate-400 space-y-1">
+            <span>Email</span>
+            <input id="login-email" type="email" placeholder="you@example.com" required class="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm focus:border-brand-400 focus:ring-1 focus:ring-brand-400" />
+          </label>
+          <label class="text-sm text-slate-400 space-y-1">
+            <span>Password</span>
+            <input id="login-password" type="password" placeholder="password" required class="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm focus:border-brand-400 focus:ring-1 focus:ring-brand-400" />
+          </label>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <button type="submit" class="rounded-lg bg-gradient-to-r from-brand-400 to-brand-500 px-4 py-2 text-sm font-semibold text-slate-950 shadow hover:opacity-90">Login</button>
+          <button type="button" class="rounded-lg border border-slate-800 px-4 py-2 text-sm text-slate-200 hover:border-brand-400" id="signup-btn">Quick Sign Up</button>
+          <button type="button" class="rounded-lg border border-slate-800 px-4 py-2 text-sm text-slate-200 hover:border-brand-400" id="logout-btn">Logout</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="rounded-xl border border-slate-800 bg-slate-900/80 p-4 shadow-xl shadow-black/40 xl:col-span-2">
+      <h2 class="text-lg font-semibold mb-2">Create / Update Med</h2>
+      <form id="med-form" class="space-y-3">
+        <label class="text-sm text-slate-400 space-y-1">
+          <span>Med ID (leave blank to create)</span>
+          <input id="med-id" type="text" placeholder="Existing ID to update" class="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm focus:border-brand-400 focus:ring-1 focus:ring-brand-400" />
+        </label>
+        <div class="grid md:grid-cols-2 gap-3">
+          <label class="text-sm text-slate-400 space-y-1">
+            <span>Name</span>
+            <input id="med-name" required class="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm focus:border-brand-400 focus:ring-1 focus:ring-brand-400" />
+          </label>
+          <label class="text-sm text-slate-400 space-y-1">
+            <span>Dosage</span>
+            <input id="med-dosage" required class="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm focus:border-brand-400 focus:ring-1 focus:ring-brand-400" />
+          </label>
+        </div>
+        <div class="grid md:grid-cols-2 gap-3">
+          <label class="text-sm text-slate-400 space-y-1">
+            <span>Time To Take</span>
+            <input id="med-time" placeholder="08:00 AM" required class="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm focus:border-brand-400 focus:ring-1 focus:ring-brand-400" />
+          </label>
+          <label class="text-sm text-slate-400 space-y-1">
+            <span>Frequency</span>
+            <input id="med-frequency" placeholder="Daily" required class="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm focus:border-brand-400 focus:ring-1 focus:ring-brand-400" />
+          </label>
+        </div>
+        <div class="grid md:grid-cols-2 gap-3">
+          <label class="text-sm text-slate-400 space-y-1">
+            <span>Profile ID (optional)</span>
+            <input id="med-profile" placeholder="Profile ObjectId" class="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm focus:border-brand-400 focus:ring-1 focus:ring-brand-400" />
+          </label>
+          <label class="text-sm text-slate-400 space-y-1">
+            <span>Notes</span>
+            <input id="med-notes" placeholder="Optional notes" class="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm focus:border-brand-400 focus:ring-1 focus:ring-brand-400" />
+          </label>
+          <label class="text-sm text-slate-400 space-y-1">
+            <span>Quantity</span>
+            <input id="med-quantity" type="number" value="0" class="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm focus:border-brand-400 focus:ring-1 focus:ring-brand-400" />
+          </label>
+        </div>
+        <button type="submit" class="rounded-lg bg-gradient-to-r from-brand-400 to-brand-500 px-4 py-2 text-sm font-semibold text-slate-950 shadow hover:opacity-90">Save Med</button>
+      </form>
+    </section>
+
+    <section class="rounded-xl border border-slate-800 bg-slate-900/80 p-4 shadow-xl shadow-black/40">
+      <div class="flex items-center justify-between mb-2">
+        <h2 class="text-lg font-semibold">Reminders</h2>
+        <button type="button" id="refresh-reminders" class="rounded-lg border border-slate-800 px-3 py-1.5 text-sm text-slate-200 hover:border-brand-400">Refresh</button>
+      </div>
+      <form id="reminder-form" class="space-y-3">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <label class="text-sm text-slate-400 space-y-1">
+            <span>Message</span>
+            <input id="reminder-message" required class="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm focus:border-brand-400 focus:ring-1 focus:ring-brand-400" />
+          </label>
+          <label class="text-sm text-slate-400 space-y-1">
+            <span>Med ID (optional)</span>
+            <input id="reminder-med" placeholder="Link to medication" class="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm focus:border-brand-400 focus:ring-1 focus:ring-brand-400" />
+          </label>
+        </div>
+        <label class="text-sm text-slate-400 space-y-1">
+          <span>Due At</span>
+          <input id="reminder-due" type="datetime-local" required class="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm focus:border-brand-400 focus:ring-1 focus:ring-brand-400" />
+        </label>
+        <button type="submit" class="rounded-lg bg-gradient-to-r from-brand-400 to-brand-500 px-4 py-2 text-sm font-semibold text-slate-950 shadow hover:opacity-90">Create Reminder</button>
+      </form>
+      <div id="reminders-list" class="mt-3 space-y-2"></div>
+    </section>
+  </div>
+
+  <section class="mt-4 rounded-xl border border-slate-800 bg-slate-900/80 p-4 shadow-xl shadow-black/40">
+    <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+      <h2 class="text-lg font-semibold">Medications</h2>
+      <button type="button" class="rounded-lg border border-slate-800 px-3 py-1.5 text-sm text-slate-200 hover:border-brand-400" id="load-meds">Load Meds</button>
+    </div>
+  <div id="meds-list" class="space-y-2"></div>
+  </section>
+
+  <div id="messages" class="mt-3 space-y-2"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

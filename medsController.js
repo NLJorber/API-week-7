@@ -16,7 +16,7 @@ exports.getAllMeds = async (req, res) => {
 
 exports.createMed = async (req, res) => {
     try {
-    const { name, dosage, timeToTake, frequency, notes, quantity, lowStockThreshold } = req.body;
+    const { name, dosage, timeToTake, frequency, notes, profileId, quantity, lowStockThreshold } = req.body;
     
     const newMed = await Med.create({ 
         userId: req.userId,
