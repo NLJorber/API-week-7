@@ -5,6 +5,8 @@ const MedSchema = new mongoose.Schema({
   profileId: { type: mongoose.Schema.Types.ObjectId, ref: "Profile" },
   name: { type: String, required: true },
   dosage: { type: String, required: true },
+  dosageAmount: { type: Number },
+  dosageUnit: { type: String, enum: ["mg", "ml", "pill"] },
   timeToTake: { type: String, required: true }, // e.g. "08:00 AM"
   frequency: { type: String, required: true }, // e.g. "Daily", "2x/day"
   taken: { type: Boolean, default: false },

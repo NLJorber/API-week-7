@@ -16,18 +16,19 @@ exports.getAllMeds = async (req, res) => {
 
 exports.createMed = async (req, res) => {
     try {
-    const { name, dosage, timeToTake, frequency, notes, profileId, quantity, lowStockThreshold } = req.body;
+    const { name, dosage, dosageAmount, dosageUnit, timeToTake, frequency, notes, profileId, quantity } = req.body;
     
     const newMed = await Med.create({ 
         userId: req.userId,
         profileId,
         name,
         dosage,
+        dosageAmount,
+        dosageUnit,
         timeToTake,
         frequency,
         notes,
-        quantity,
-        lowStockThreshold
+        quantity
     });
 
     res.send({ message: "Medication created successfully", med: newMed });
@@ -58,6 +59,8 @@ exports.updateMedById = async (req, res) => {
     { 
         name,
         dosage,
+        dosageAmount,
+        dosageUnit,
         timeToTake,
         frequency,
         notes,
@@ -70,6 +73,8 @@ exports.updateMedById = async (req, res) => {
         { 
         name,
         dosage,
+        dosageAmount,
+        dosageUnit,
         timeToTake,
         frequency,
         notes,

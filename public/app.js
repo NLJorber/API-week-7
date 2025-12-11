@@ -101,9 +101,15 @@ if (medForm) {
   medForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     const id = document.getElementById("med-id").value.trim();
+    const dosageAmountInput = document.getElementById("med-dosage-amount").value;
+    const dosageAmount = dosageAmountInput === "" ? undefined : Number(dosageAmountInput);
+    const dosageUnit = document.getElementById("med-dosage-unit").value || undefined;
+
     const body = {
       name: document.getElementById("med-name").value,
       dosage: document.getElementById("med-dosage").value,
+      dosageAmount,
+      dosageUnit,
       timeToTake: document.getElementById("med-time").value,
       frequency: document.getElementById("med-frequency").value,
       notes: document.getElementById("med-notes").value,
@@ -155,6 +161,7 @@ function renderMeds(meds) {
         <div>
           <div class="font-semibold text-slate-100">${med.name}</div>
           <div class="text-xs text-slate-400">${med.dosage} • ${med.frequency} • ${med.timeToTake}</div>
+          ${med.dosageAmount ? `<div class="text-xs text-slate-500">Amount: ${med.dosageAmount} ${med.dosageUnit || ""}</div>` : ""}
         </div>
         <span class="inline-flex items-center rounded-full border px-2 py-1 text-xs border-slate-700 text-slate-300">
           Qty: ${med.quantity ?? 0}
