@@ -173,7 +173,7 @@ function renderMeds(meds) {
       <div class="flex flex-wrap items-center gap-2 mt-3">
 
       <button data-action="taken" data-id="${med._id}"
-      class="rounded-lg bg-emerald-500/90 px-3 py-1.5 text-xs font-semibold text-slate-950 hover:opacity-90">
+      class="rounded-lg bg-brand-500/90 px-3 py-1.5 text-xs font-semibold text-slate-950 hover:opacity-90">
       Taken
     </button>
 
