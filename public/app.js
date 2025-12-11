@@ -108,8 +108,7 @@ if (medForm) {
       frequency: document.getElementById("med-frequency").value,
       notes: document.getElementById("med-notes").value,
       profileId: document.getElementById("med-profile").value || undefined,
-      quantity: Number(document.getElementById("med-quantity").value || 0),
-      lowStockThreshold: Number(document.getElementById("med-threshold").value || 0),
+      quantity: Number(document.getElementById("med-quantity").value || 0)
     };
     try {
       if (id) {
@@ -150,7 +149,6 @@ function renderMeds(meds) {
   container.innerHTML = "";
   meds.forEach((med) => {
     const card = document.createElement("div");
-    const low = med.quantity !== undefined && med.lowStockThreshold !== undefined && med.quantity <= med.lowStockThreshold;
     card.className = "rounded-xl border border-slate-800 bg-slate-950 px-3 py-3";
     card.innerHTML = `
       <div class="flex items-start justify-between gap-3">
@@ -158,7 +156,7 @@ function renderMeds(meds) {
           <div class="font-semibold text-slate-100">${med.name}</div>
           <div class="text-xs text-slate-400">${med.dosage} • ${med.frequency} • ${med.timeToTake}</div>
         </div>
-        <span class="inline-flex items-center rounded-full border px-2 py-1 text-xs ${low ? "border-red-500/50 text-red-200" : "border-slate-700 text-slate-300"}">
+        <span class="inline-flex items-center rounded-full border px-2 py-1 text-xs border-slate-700 text-slate-300">
           Qty: ${med.quantity ?? 0}
         </span>
       </div>
