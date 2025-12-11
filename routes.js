@@ -5,6 +5,7 @@ const { signUp, login } = require("./authController");
 const { createProfile, getProfiles, getProfileById, updateProfile, deleteProfile } = require("./profileController");
 const { createReminder, listReminders, dismissReminder, markDue } = require("./reminderController");
 const auth = require("./authMiddleware");
+const eventController = require("./eventController");
 
 //base url lh 3001
 //get all meds
