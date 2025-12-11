@@ -162,6 +162,12 @@ function renderMeds(meds) {
           <div class="font-semibold text-slate-100">${med.name}</div>
           <div class="text-xs text-slate-400">${med.dosage} • ${med.frequency} • ${med.timeToTake}</div>
           ${med.dosageAmount ? `<div class="text-xs text-slate-500">Amount: ${med.dosageAmount} ${med.dosageUnit || ""}</div>` : ""}
+          <div class="text-xs text-slate-500 mt-1">
+            Taken: ${med.takenCount ?? 0} | Skipped: ${med.skippedCount ?? 0}
+          </div>
+          <div class="text-xs text-slate-500 mt-1">
+            Last taken: ${med.lastTakenAt ? new Date(med.lastTakenAt).toLocaleString() : "never"}
+          </div>
         </div>
         <span class="inline-flex items-center rounded-full border px-2 py-1 text-xs border-slate-700 text-slate-300">
           Qty: ${med.quantity ?? 0}

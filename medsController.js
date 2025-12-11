@@ -96,15 +96,21 @@ exports.skipMedById = async (req, res) => {
     try {
         const { id } = req.params;
         const { reason } = req.body || {};
-        const med = await Med.findOneAndUpdate(
-            { _id: id, userId: req.userId },
-            { taken: false, lastSkippedAt: new Date(), skipReason: reason },
-            { new: true }
-        );
+        const med = await Med.findOne({ _id: id, userId: req.userId });
         if (!med) {
             return res.status(404).send({ message: "Medication not found" });
         }
-        res.send({ message: "Dose marked as skipped", med });
+
+        med.taken = false;
+        med.lastSkippedAt = new Date();
+        med.skipReason = reason;
+        med.skippedCount = (med.skippedCount || 0) + 1;
+        if (typeof med.quantity === "number" && med.quantity > 0) {
+            med.quantity = med.quantity - 1;
+        }
+
+        await med.save();
+        res.send({ message: "Dose marked as skipped and inventory updated", med });
     } catch (error) {
         res.status(500).send({ message: "Error skipping dose", error });
     }
@@ -114,17 +120,22 @@ exports.markMedicationTaken = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const med = await Med.findOneAndUpdate(
-      { _id: id, userId: req.userId },
-      { lastTakenAt: new Date(), taken: true },
-      { new: true }
-    );
+    const med = await Med.findOne({ _id: id, userId: req.userId });
 
     if (!med) {
       return res.status(404).send({ message: "Medication not found" });
     }
 
-    res.send({ message: "Medication marked as taken", med });
+    med.lastTakenAt = new Date();
+    med.taken = true;
+    med.takenCount = (med.takenCount || 0) + 1;
+    if (typeof med.quantity === "number" && med.quantity > 0) {
+      med.quantity = med.quantity - 1;
+    }
+
+    await med.save();
+
+    res.send({ message: "Medication marked as taken and inventory updated", med });
   } catch (error) {
     res.status(500).send({ message: "Error marking dose as taken", error });
   }
