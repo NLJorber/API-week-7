@@ -110,6 +110,26 @@ exports.skipMedById = async (req, res) => {
     }
 };
 
+exports.markMedicationTaken = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const med = await Med.findOneAndUpdate(
+      { _id: id, userId: req.userId },
+      { lastTakenAt: new Date(), taken: true },
+      { new: true }
+    );
+
+    if (!med) {
+      return res.status(404).send({ message: "Medication not found" });
+    }
+
+    res.send({ message: "Medication marked as taken", med });
+  } catch (error) {
+    res.status(500).send({ message: "Error marking dose as taken", error });
+  }
+};
+
 exports.deleteMedById = async (req, res) => {
   try {
     const med = await Med.findOneAndDelete({ _id: req.params.id, userId: req.userId });
