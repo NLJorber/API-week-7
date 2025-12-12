@@ -21,5 +21,11 @@
     "node-cron": "^4.2.1",
     "nodemon": "^3.1.11",
     "save-dev": "^0.0.1-security"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "eslint": "^9.39.1",
+    "eslint-plugin-react": "^7.37.5",
+    "globals": "^16.5.0"
   }
 }
