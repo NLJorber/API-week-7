@@ -47,4 +47,9 @@ router.get("/reminders", auth, listReminders);
 router.post("/reminders/:id/dismiss", auth, dismissReminder);
 router.post("/reminders/:id/mark-due", auth, markDue); // useful for manual testing
 
+router.post("/events", auth, eventController.createEvent);
+router.get("/events", auth, eventController.getEvents);
+router.put("/events/:id", auth, eventController.updateEvent);
+router.delete("/events/:id", auth, eventController.deleteEvent);
+
 module.exports = router;

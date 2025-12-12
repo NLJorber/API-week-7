@@ -2,7 +2,7 @@ const Event = require('./event');
 
 exports.getEvents = async (req, res) => {
     try {
-        const events = await Event.find({ user: req.user._id }).populate('medication');
+        const events = await Event.find({ user: req.userId }).populate('medication');
         res.json(events);
     } catch (err) {
         res.status(500).json({ message: 'Error fetching events', error: err.message });
@@ -23,7 +23,7 @@ exports.createEvent = async (req, res) => {
             end,
             medication,
             notes,
-            user: req.user._id
+            user: req.userId
         })
 
         res.status(201).json(await event.populate('medication'));
@@ -35,7 +35,7 @@ exports.createEvent = async (req, res) => {
 exports.updateEvent = async (req, res) => {
     try {
         const event = await Event.findOneAndUpdate(
-            { _id: req.params.id, user: req.user._id},
+            { _id: req.params.id, user: req.userId},
             req.body,
             { new: true }
         ).populate('medication');
@@ -49,7 +49,7 @@ exports.updateEvent = async (req, res) => {
 
 exports.deleteEvent = async (req, res) => {
     try {
-        const event = await Event.findOneAndDelete({ _id: req.params.id, user: req.user._id });
+        const event = await Event.findOneAndDelete({ id: req.params.id, user: req.userId });
         if (!event) return res.status(404).json({ message: 'Event not found' });
         res.json({ message: 'Event deleted successfully' });
     } catch (err) {
