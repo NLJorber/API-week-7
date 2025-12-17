@@ -1,0 +1,67 @@
+Backend test quick reference (base URL http://localhost:3001). Copy/paste these curl commands. Replace placeholders like YOUR_EMAIL, MED_ID, EVENT_ID, PROFILE_ID. Set your token once: `export TOKEN=...`.
+
+Auth (public)
+- Signup:
+  curl -X POST http://localhost:3001/auth/signup \
+    -H "Content-Type: application/json" \
+    -d '{"email":"YOUR_EMAIL","password":"password123","name":"You"}'
+- Login (get token):
+  curl -X POST http://localhost:3001/auth/login \
+    -H "Content-Type: application/json" \
+    -d '{"email":"YOUR_EMAIL","password":"password123"}'
+
+Meds (protected)
+- List: curl -H "Authorization: Bearer $TOKEN" http://localhost:3001/
+- Get one: curl -H "Authorization: Bearer $TOKEN" http://localhost:3001/MED_ID
+- Create:
+  curl -X POST http://localhost:3001/ \
+    -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
+    -d '{"name":"Amoxicillin","dosage":"500mg","dosageAmount":500,"dosageUnit":"mg","timeToTake":"08:00 AM","frequency":"Daily","notes":"after breakfast","profileId":"PROFILE_ID","quantity":30}'
+- Update:
+  curl -X PUT http://localhost:3001/MED_ID \
+    -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
+    -d '{"name":"New name"}'
+- Skip dose:
+  curl -X POST http://localhost:3001/MED_ID/skip \
+    -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
+    -d '{"reason":"optional note"}'
+- Mark taken: curl -X POST http://localhost:3001/meds/MED_ID/taken -H "Authorization: Bearer $TOKEN"
+- Delete: curl -X DELETE http://localhost:3001/MED_ID -H "Authorization: Bearer $TOKEN"
+- Inventory adjust:
+  curl -X PATCH http://localhost:3001/meds/MED_ID/inventory \
+    -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
+    -d '{"amount":-1}'
+
+Profiles (protected)
+- Create:
+  curl -X POST http://localhost:3001/profiles \
+    -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
+    -d '{"name":"Alice","age":34,"notes":"diabetic"}'
+- List: curl -H "Authorization: Bearer $TOKEN" http://localhost:3001/profiles
+- Get one: curl -H "Authorization: Bearer $TOKEN" http://localhost:3001/profiles/PROFILE_ID
+- Update:
+  curl -X PUT http://localhost:3001/profiles/PROFILE_ID \
+    -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
+    -d '{"name":"Alice B","notes":"updated"}'
+- Delete: curl -X DELETE http://localhost:3001/profiles/PROFILE_ID -H "Authorization: Bearer $TOKEN"
+
+Reminders (protected)
+- Create:
+  curl -X POST http://localhost:3001/reminders \
+    -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
+    -d '{"message":"Take morning pill","medId":"MED_ID","dueAt":"2024-06-01T09:00:00.000Z"}'
+- List: curl -H "Authorization: Bearer $TOKEN" http://localhost:3001/reminders
+- Dismiss: curl -X POST http://localhost:3001/reminders/REMINDER_ID/dismiss -H "Authorization: Bearer $TOKEN"
+- Mark due: curl -X POST http://localhost:3001/reminders/REMINDER_ID/mark-due -H "Authorization: Bearer $TOKEN"
+
+Events (protected)
+- List: curl -H "Authorization: Bearer $TOKEN" http://localhost:3001/events
+- Create:
+  curl -X POST http://localhost:3001/events \
+    -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
+    -d '{"title":"Dose","start":"2024-06-01T09:00:00.000Z","end":"2024-06-01T09:15:00.000Z","medication":"MED_ID","notes":"before breakfast"}'
+- Update:
+  curl -X PUT http://localhost:3001/events/EVENT_ID \
+    -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
+    -d '{"title":"Updated title"}'
+- Delete: curl -X DELETE http://localhost:3001/events/EVENT_ID -H "Authorization: Bearer $TOKEN"

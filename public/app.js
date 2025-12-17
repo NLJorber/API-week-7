@@ -2,6 +2,14 @@ const messagesEl = document.getElementById("messages");
 const authStatusEl = document.getElementById("auth-status");
 let token = localStorage.getItem("token") || "";
 
+const apiBaseMeta = document.querySelector('meta[name="api-base-url"]');
+const API_BASE_URL = (() => {
+  if (window.API_BASE_URL) return window.API_BASE_URL;
+  if (apiBaseMeta && apiBaseMeta.content) return apiBaseMeta.content;
+  if (window.location.origin && window.location.origin !== "null") return window.location.origin;
+  return "";
+})().replace(/\/$/, "");
+
 function setMessage(text, type = "") {
   const el = document.createElement("div");
   const base = "rounded-lg border px-3 py-2 text-sm";
@@ -37,7 +45,8 @@ async function api(path, { method = "GET", body, headers = {} } = {}) {
   if (token) {
     opts.headers["Authorization"] = "Bearer " + token;
   }
-  const res = await fetch(path, opts);
+  const url = path.startsWith("http") ? path : `${API_BASE_URL}${path}`;
+  const res = await fetch(url, opts);
   const text = await res.text();
   let data = {};
   if (text) {
