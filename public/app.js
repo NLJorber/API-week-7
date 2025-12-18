@@ -38,20 +38,20 @@ if (medForm) {
   medForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     const id = document.getElementById("med-id").value.trim();
-    const dosageAmountInput = document.getElementById("med-dosage-amount").value;
-    const dosageAmount = dosageAmountInput === "" ? undefined : Number(dosageAmountInput);
+    const amountInput = document.getElementById("med-amount").value;
+    const amount = amountInput === "" ? undefined : Number(amountInput);
     const dosageUnit = document.getElementById("med-dosage-unit").value || undefined;
 
     const body = {
       name: document.getElementById("med-name").value,
       dosage: document.getElementById("med-dosage").value,
-      dosageAmount,
+      amount,
       dosageUnit,
       timeToTake: document.getElementById("med-time").value,
       frequency: document.getElementById("med-frequency").value,
       notes: document.getElementById("med-notes").value,
       profileId: document.getElementById("med-profile").value || undefined,
-      quantity: Number(document.getElementById("med-quantity").value || 0)
+      inventory: Number(document.getElementById("med-inventory").value || 0)
     };
     try {
       if (id) {
@@ -96,9 +96,9 @@ function renderMeds(meds) {
     card.innerHTML = `
       <div class="flex items-start justify-between gap-3">
         <div>
-          <div class="font-semibold text-slate-100">${med.name}</div>
+          <div class="font-semibold text-slate-600">${med.name}</div>
           <div class="text-xs text-slate-400">${med.dosage} • ${med.frequency} • ${med.timeToTake}</div>
-          ${med.dosageAmount ? `<div class="text-xs text-slate-500">Amount: ${med.dosageAmount} ${med.dosageUnit || ""}</div>` : ""}
+          ${med.amount ? `<div class="text-xs text-slate-500">Amount: ${med.amount} ${med.dosageUnit || ""}</div>` : ""}
           <div class="text-xs text-slate-500 mt-1">
             Taken: ${med.takenCount ?? 0} | Skipped: ${med.skippedCount ?? 0}
           </div>
@@ -106,8 +106,8 @@ function renderMeds(meds) {
             Last taken: ${med.lastTakenAt ? new Date(med.lastTakenAt).toLocaleString() : "never"}
           </div>
         </div>
-        <span class="inline-flex items-center rounded-full border px-2 py-1 text-xs border-slate-700 text-slate-300">
-          Qty: ${med.quantity ?? 0}
+        <span class="inline-flex items-center rounded-lg border px-2 py-1 text-xs border-slate-200 text-slate-500">
+          Qty: ${med.inventory ?? 0}
         </span>
       </div>
       <div class="text-xs text-slate-400 mt-2">${med.notes || ""}</div>
@@ -116,19 +116,19 @@ function renderMeds(meds) {
       <div class="flex flex-wrap items-center gap-2 mt-3">
 
       <button data-action="taken" data-id="${med._id}"
-      class="rounded-lg bg-brand-500/90 px-3 py-1.5 text-xs font-semibold text-slate-950 hover:opacity-90">
+      class="rounded-lg bg-brand-500/90 px-3 py-1.5 text-xs font-semibold text-white hover:opacity-90">
       Taken
     </button>
 
 
-        <button data-action="skip" data-id="${med._id}" class="rounded-lg bg-brand-500/90 px-3 py-1.5 text-xs font-semibold text-slate-950 hover:opacity-90">Skip dose</button>
+        <button data-action="skip" data-id="${med._id}" class="rounded-lg bg-brand-500/90 px-3 py-1.5 text-xs font-semibold text-white hover:opacity-90">Skip dose</button>
         
-        <button data-action="delete" data-id="${med._id}" class="rounded-lg border border-red-500/50 px-3 py-1.5 text-xs text-red-100 hover:bg-red-500/10">Delete</button>
+        <button data-action="delete" data-id="${med._id}" class="rounded-lg border border-pink-500/50 px-3 py-1.5 text-xs font-semibold text-pink-500 hover:bg-pink-500/20">Delete</button>
         
         <div class="flex items-center gap-2">
-          <input data-id="${med._id}" data-role="inventory-amount" class="w-24 rounded-lg border border-slate-800 bg-slate-900 px-2 py-1 text-xs" type="number" placeholder="+/- qty" />
+          <input data-id="${med._id}" data-role="inventory-amount" class="w-24 rounded-lg  bg-brand-500/90 px-2 py-1 text-xs font-semibold text-white" type="number" placeholder="+/- qty" />
           
-          <button data-action="inventory" data-id="${med._id}" class="rounded-lg border border-slate-800 px-3 py-1.5 text-xs text-slate-200 hover:border-brand-400">Add</button>
+          <button data-action="inventory" data-id="${med._id}" class="rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-500 hover:border-brand-400">Add</button>
         </div>
       </div>
     `;
