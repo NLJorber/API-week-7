@@ -1,6 +1,4 @@
 const messagesEl = document.getElementById("messages");
-const authStatusEl = document.getElementById("auth-status");
-let token = localStorage.getItem("token") || "";
 
 function setMessage(text, type = "") {
   const el = document.createElement("div");
@@ -16,26 +14,11 @@ function setMessage(text, type = "") {
   setTimeout(() => el.remove(), 6000);
 }
 
-function updateAuthStatus() {
-  if (token) {
-    authStatusEl.textContent = "Authenticated";
-    authStatusEl.className = "rounded-lg border border-emerald-500/40 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-100";
-  } else {
-    authStatusEl.textContent = "Not authenticated";
-    authStatusEl.className = "rounded-lg border border-slate-800 bg-slate-900 px-3 py-2 text-sm text-slate-200";
-  }
-}
-
-updateAuthStatus();
-
 async function api(path, { method = "GET", body, headers = {} } = {}) {
   const opts = { method, headers: { ...headers } };
   if (body !== undefined) {
     opts.body = typeof body === "string" ? body : JSON.stringify(body);
     opts.headers["Content-Type"] = "application/json";
-  }
-  if (token) {
-    opts.headers["Authorization"] = "Bearer " + token;
   }
   const res = await fetch(path, opts);
   const text = await res.text();
@@ -47,52 +30,6 @@ async function api(path, { method = "GET", body, headers = {} } = {}) {
     throw new Error(data.message || res.statusText);
   }
   return data;
-}
-
-// Auth
-const loginForm = document.getElementById("login-form");
-if (loginForm) {
-  loginForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const email = document.getElementById("login-email").value;
-    const password = document.getElementById("login-password").value;
-    try {
-      const data = await api("/auth/login", { method: "POST", body: { email, password } });
-      token = data.token;
-      localStorage.setItem("token", token);
-      updateAuthStatus();
-      setMessage("Logged in", "success");
-      loadMeds();
-      loadReminders();
-    } catch (error) {
-      setMessage(error.message, "danger");
-    }
-  });
-}
-
-const signupBtn = document.getElementById("signup-btn");
-if (signupBtn) {
-  signupBtn.addEventListener("click", async () => {
-    const email = document.getElementById("login-email").value;
-    const password = document.getElementById("login-password").value || "password123";
-    const name = email.split("@")[0] || "User";
-    try {
-      await api("/auth/signup", { method: "POST", body: { email, password, name } });
-      setMessage("Signup success, now log in.", "success");
-    } catch (error) {
-      setMessage(error.message, "danger");
-    }
-  });
-}
-
-const logoutBtn = document.getElementById("logout-btn");
-if (logoutBtn) {
-  logoutBtn.addEventListener("click", () => {
-    token = "";
-    localStorage.removeItem("token");
-    updateAuthStatus();
-    setMessage("Logged out");
-  });
 }
 
 // Med create/update
@@ -312,8 +249,6 @@ function renderReminders(reminders) {
   });
 }
 
-// Auto load if token present
-if (token) {
-  loadMeds();
-  loadReminders();
-}
+// Auto load data
+loadMeds();
+loadReminders();

@@ -1,55 +1,49 @@
 const express = require("express");
 const router = express.Router();
 const { getAllMeds, createMed, getMedById, updateMedById, skipMedById, markMedicationTaken, deleteMedById, adjustInventory } = require("./medsController");
-const { signUp, login } = require("./authController");
 const { createProfile, getProfiles, getProfileById, updateProfile, deleteProfile } = require("./profileController");
 const { createReminder, listReminders, dismissReminder, markDue } = require("./reminderController");
-const auth = require("./authMiddleware");
 const eventController = require("./eventController");
 
 //base url lh 3001
 //get all meds
-router.get("/", auth, getAllMeds);
+router.get("/", getAllMeds);
 
 //get specific med by id
-router.get("/:id", auth, getMedById )
+router.get("/:id", getMedById )
 
 // base url again
-router.post("/", auth, createMed)
+router.post("/", createMed)
 
 //update specific med by ID
-router.put("/:id", auth, updateMedById)
+router.put("/:id", updateMedById)
 
 //mark dose as skipped
-router.post("/:id/skip", auth, skipMedById)
+router.post("/:id/skip", skipMedById)
 
 //mark med as taken
-router.post("/meds/:id/taken", auth, markMedicationTaken)
+router.post("/meds/:id/taken", markMedicationTaken)
 
 //This deletes a med by ID
-router.delete("/:id", auth, deleteMedById);
-router.patch("/meds/:id/inventory", auth, adjustInventory);
-
-//This to authenticate user
-router.post("/auth/signup", signUp);
-router.post("/auth/login", login);
+router.delete("/:id", deleteMedById);
+router.patch("/meds/:id/inventory", adjustInventory);
 
 //This to get user profile
-router.post("/profiles", auth, createProfile);
-router.get("/profiles", auth, getProfiles);
-router.get("/profiles/:id", auth, getProfileById);
-router.put("/profiles/:id", auth, updateProfile);
-router.delete("/profiles/:id", auth, deleteProfile);
+router.post("/profiles", createProfile);
+router.get("/profiles", getProfiles);
+router.get("/profiles/:id", getProfileById);
+router.put("/profiles/:id", updateProfile);
+router.delete("/profiles/:id", deleteProfile);
 
 //Reminders
-router.post("/reminders", auth, createReminder);
-router.get("/reminders", auth, listReminders);
-router.post("/reminders/:id/dismiss", auth, dismissReminder);
-router.post("/reminders/:id/mark-due", auth, markDue); // useful for manual testing
+router.post("/reminders", createReminder);
+router.get("/reminders", listReminders);
+router.post("/reminders/:id/dismiss", dismissReminder);
+router.post("/reminders/:id/mark-due", markDue); // useful for manual testing
 
-router.post("/events", auth, eventController.createEvent);
-router.get("/events", auth, eventController.getEvents);
-router.put("/events/:id", auth, eventController.updateEvent);
-router.delete("/events/:id", auth, eventController.deleteEvent);
+router.post("/events", eventController.createEvent);
+router.get("/events", eventController.getEvents);
+router.put("/events/:id", eventController.updateEvent);
+router.delete("/events/:id", eventController.deleteEvent);
 
 module.exports = router;

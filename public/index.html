@@ -23,32 +23,10 @@
 <body class="min-h-screen bg-slate-950 text-slate-100 px-6 py-6">
   <header class="mb-4 space-y-1">
     <h1 class="text-2xl font-semibold">Medication Manager</h1>
-    <h3 class="text-sm text-slate-400">Test the API with a tiny UI. Use /auth/login first.</h3>
-    <div id="auth-status" class="rounded-lg border border-slate-800 bg-slate-900 px-3 py-2 text-sm">Not authenticated</div>
+    <h3 class="text-sm text-slate-400">Test the API with a tiny UI.</h3>
   </header>
 
   <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-    <section class="rounded-xl border border-slate-800 bg-slate-900/80 p-4 shadow-xl shadow-black/40">
-      <h2 class="text-lg font-semibold mb-2">Auth</h2>
-      <form id="login-form" class="space-y-3">
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <label class="text-sm text-slate-400 space-y-1">
-            <span>Email</span>
-            <input id="login-email" type="email" placeholder="you@example.com" required class="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm focus:border-brand-400 focus:ring-1 focus:ring-brand-400" />
-          </label>
-          <label class="text-sm text-slate-400 space-y-1">
-            <span>Password</span>
-            <input id="login-password" type="password" placeholder="password" required class="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm focus:border-brand-400 focus:ring-1 focus:ring-brand-400" />
-          </label>
-        </div>
-        <div class="flex flex-wrap gap-2">
-          <button type="submit" class="rounded-lg bg-gradient-to-r from-brand-400 to-brand-500 px-4 py-2 text-sm font-semibold text-slate-950 shadow hover:opacity-90">Login</button>
-          <button type="button" class="rounded-lg border border-slate-800 px-4 py-2 text-sm text-slate-200 hover:border-brand-400" id="signup-btn">Quick Sign Up</button>
-          <button type="button" class="rounded-lg border border-slate-800 px-4 py-2 text-sm text-slate-200 hover:border-brand-400" id="logout-btn">Logout</button>
-        </div>
-      </form>
-    </section>
-
     <section class="rounded-xl border border-slate-800 bg-slate-900/80 p-4 shadow-xl shadow-black/40 xl:col-span-2">
       <h2 class="text-lg font-semibold mb-2">Create / Update Med</h2>
       <form id="med-form" class="space-y-3">
