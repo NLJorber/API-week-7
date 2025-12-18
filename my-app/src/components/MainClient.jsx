@@ -1,21 +1,14 @@
 "use client";
 import { useState, useCallback, useEffect } from "react";
-import Auth from "./Auth";
 import MedForm from "./MedForm";
 import Reminders from "./Reminders";
 import MedsList from "./MedsList";
 import Messages from "./Messages";
 
 export default function MainClient() {
-  const [token, setToken] = useState("");
   const [messages, setMessages] = useState([]);
   const [meds, setMeds] = useState([]);
   const [reminders, setReminders] = useState([]);
-
-  useEffect(() => {
-    const saved = localStorage.getItem("token") || "";
-    if (saved) setToken(saved);
-  }, []);
 
   const setMessage = useCallback((text, type = "") => {
     const id = Math.random().toString(36).slice(2, 9);
@@ -32,7 +25,6 @@ export default function MainClient() {
       opts.body = typeof body === "string" ? body : JSON.stringify(body);
       opts.headers["Content-Type"] = "application/json";
     }
-    if (token) opts.headers["Authorization"] = "Bearer " + token;
     const res = await fetch(path, opts);
     const text = await res.text();
     let data = {};
@@ -41,7 +33,7 @@ export default function MainClient() {
     }
     if (!res.ok) throw new Error(data.message || res.statusText);
     return data;
-  }, [token]);
+  }, []);
 
   const loadMeds = useCallback(async () => {
     try {
@@ -62,16 +54,13 @@ export default function MainClient() {
   }, [api, setMessage]);
 
   useEffect(() => {
-    if (token) {
-      loadMeds();
-      loadReminders();
-    }
-  }, [token, loadMeds, loadReminders]);
+    loadMeds();
+    loadReminders();
+  }, [loadMeds, loadReminders]);
 
   return (
     <div>
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        <Auth token={token} setToken={setToken} api={api} setMessage={setMessage} loadMeds={loadMeds} loadReminders={loadReminders} />
         <MedForm api={api} setMessage={setMessage} loadMeds={loadMeds} />
         <Reminders reminders={reminders} api={api} setMessage={setMessage} loadReminders={loadReminders} />
       </div>

@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const ReminderSchema = new mongoose.Schema({
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  userId: { type: String, required: true },
   medId: { type: mongoose.Schema.Types.ObjectId, ref: "Med" },
   message: { type: String, required: true },
   dueAt: { type: Date, required: true },

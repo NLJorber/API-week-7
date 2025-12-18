@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const ProfileSchema = new mongoose.Schema(
 
   {
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    userId: { type: String, required: true },
     name: { type: String, required: true },
     type: { type: String }, //add other people ypes
     notes: { type: String }
