@@ -2,11 +2,11 @@ const messagesEl = document.getElementById("messages");
 
 function setMessage(text, type = "") {
   const el = document.createElement("div");
-  const base = "rounded-lg border px-3 py-2 text-sm";
+  const base = "fixed top-6 right-6 z-50 min-w-[240px] max-w-md rounded-lg px-4 py-3 text-sm shadow-xl";
   const variants = {
-    "": "border-slate-800 bg-slate-900 text-slate-200",
-    danger: "border-red-500/40 bg-red-500/10 text-red-100",
-    success: "border-emerald-500/40 bg-emerald-500/10 text-emerald-100"
+    "": "border border-slate-200 bg-white text-slate-700 shadow-black/10",
+    danger: "border border-pink-200 bg-pink-50 text-pink-700 shadow-pink-500/20",
+    success: "border border-emerald-200 bg-emerald-50 text-emerald-900 shadow-emerald-500/20"
   };
   el.className = base + " " + (variants[type] || variants[""]);
   el.textContent = text;
@@ -86,7 +86,7 @@ function renderMeds(meds) {
   const container = document.getElementById("meds-list");
   if (!container) return;
   if (!Array.isArray(meds) || meds.length === 0) {
-    container.innerHTML = '<div class="text-sm text-slate-500">No meds found</div>';
+    container.innerHTML = '<div class="text-sm text-slate-400">No meds found</div>';
     return;
   }
   container.innerHTML = "";
@@ -96,10 +96,10 @@ function renderMeds(meds) {
     card.innerHTML = `
       <div class="flex items-start justify-between gap-3">
         <div>
-          <div class="font-semibold text-slate-600">${med.name}</div>
+          <div class="font-semibold text-slate-400">${med.name}</div>
           <div class="text-xs text-slate-400">${med.dosage} • ${med.frequency} • ${med.timeToTake}</div>
-          ${med.amount ? `<div class="text-xs text-slate-500">Amount: ${med.amount} ${med.dosageUnit || ""}</div>` : ""}
-          <div class="text-xs text-slate-500 mt-1">
+          ${med.amount ? `<div class="text-xs text-slate-400">Amount: ${med.amount} ${med.dosageUnit || ""}</div>` : ""}
+          <div class="text-xs text-slate-400 mt-1">
             Taken: ${med.takenCount ?? 0} | Skipped: ${med.skippedCount ?? 0}
           </div>
           <div class="text-xs text-slate-500 mt-1">
@@ -116,7 +116,7 @@ function renderMeds(meds) {
       <div class="flex flex-wrap items-center gap-2 mt-3">
 
       <button data-action="taken" data-id="${med._id}"
-      class="rounded-lg bg-brand-500/90 px-3 py-1.5 text-xs font-semibold text-white hover:opacity-90">
+      class="rounded-lg bg-brand-500/90 px-3 py-1.5 text-xs font-semibold text-slate-500 hover:opacity-90">
       Taken
     </button>
 
@@ -126,9 +126,9 @@ function renderMeds(meds) {
         <button data-action="delete" data-id="${med._id}" class="rounded-lg border border-pink-500/50 px-3 py-1.5 text-xs font-semibold text-pink-500 hover:bg-pink-500/20">Delete</button>
         
         <div class="flex items-center gap-2">
-          <input data-id="${med._id}" data-role="inventory-amount" class="w-24 rounded-lg  bg-brand-500/90 px-2 py-1 text-xs font-semibold text-white" type="number" placeholder="+/- qty" />
+          <input data-id="${med._id}" data-role="inventory-amount" class="w-24 rounded-lg border border-slate-800 bg-white px-2 py-1 text-xs text-slate-600" type="number" placeholder="+/- qty" />
           
-          <button data-action="inventory" data-id="${med._id}" class="rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-500 hover:border-brand-400">Add</button>
+          <button data-action="inventory" data-id="${med._id}" class="rounded-lg border border-slate-800 px-3 py-1.5 text-xs font-semibold text-slate-500 hover:border-brand-400">Add</button>
         </div>
       </div>
     `;
@@ -211,18 +211,18 @@ function renderReminders(reminders) {
   reminders.forEach((rem) => {
     const card = document.createElement("div");
     const due = rem.status === "due";
-    card.className = "rounded-xl border border-slate-800 bg-slate-950 px-3 py-3";
+    card.className = "rounded-xl border border-slate-800 bg-white px-3 py-3";
     card.innerHTML = `
       <div class="flex items-start justify-between gap-3">
         <div>
-          <div class="font-semibold text-slate-100">${rem.message}</div>
-          <div class="text-xs text-slate-400">Due: ${new Date(rem.dueAt).toLocaleString()}</div>
+          <div class="font-semibold text-slate-800">${rem.message}</div>
+          <div class="text-xs text-slate-600">Due: ${new Date(rem.dueAt).toLocaleString()}</div>
         </div>
-        <span class="inline-flex items-center rounded-full border px-2 py-1 text-xs ${due ? "border-amber-400/50 text-amber-200" : "border-slate-700 text-slate-300"}">
+        <span class="inline-flex items-center rounded-full border px-2 py-1 text-xs ${due ? "border-amber-400/50 text-amber-700" : "border-slate-400 text-slate-600"}">
           ${rem.status}
         </span>
       </div>
-      <div class="text-xs text-slate-500 mt-2">Med: ${rem.medId || "n/a"}</div>
+      <div class="text-xs text-slate-600 mt-2">Med: ${rem.medId || "n/a"}</div>
       <div class="flex flex-wrap gap-2 mt-3">
         <button data-action="dismiss" data-id="${rem._id}" class="rounded-lg bg-brand-500/90 px-3 py-1.5 text-xs font-semibold text-slate-950 hover:opacity-90">Dismiss</button>
         <button data-action="mark-due" data-id="${rem._id}" class="rounded-lg border border-slate-800 px-3 py-1.5 text-xs text-slate-200 hover:border-brand-400">Mark Due</button>

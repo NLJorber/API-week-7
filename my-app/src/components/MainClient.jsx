@@ -68,7 +68,7 @@ export default function MainClient() {
       <section className="mt-4 rounded-xl border border-slate-800 bg-slate-900/80 p-4 shadow-xl shadow-black/40">
         <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
           <h2 className="text-lg font-semibold">Medications</h2>
-          <button type="button" onClick={loadMeds} className="rounded-lg border border-slate-800 px-3 py-1.5 text-sm text-slate-200 hover:border-brand-400" id="load-meds">Load Meds</button>
+          <button type="button" onClick={loadMeds} className="rounded-lg border border-slate-800 px-3 py-1.5 text-sm text-slate-500 hover:border-brand-400" id="load-meds">Load Meds</button>
         </div>
         <div id="meds-list" className="space-y-2">
           <MedsList meds={meds} api={api} setMessage={setMessage} loadMeds={loadMeds} />

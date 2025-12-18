@@ -46,16 +46,16 @@ export default function MedForm({ api, setMessage, loadMeds }) {
       <form id="med-form" className="space-y-3" onSubmit={onSubmit}>
         <label className="text-sm text-slate-400 space-y-1">
           <span>Med ID (leave blank to create)</span>
-          <input value={id} onChange={(e) => setId(e.target.value)} id="med-id" type="text" placeholder="Existing ID to update" className="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm focus:border-brand-400 focus:ring-1 focus:ring-brand-400" />
+          <input value={id} onChange={(e) => setId(e.target.value)} id="med-id" type="text" placeholder="Existing ID to update" className="w-full rounded-lg border border-slate-800 bg-white px-3 py-2 text-sm focus:border-brand-400 focus:ring-1 focus:ring-brand-400" />
         </label>
 
         <div className="grid md:grid-cols-2 gap-3">
           <label className="text-sm text-slate-400 space-y-1">
             <span>Name</span>
-            <input value={name} onChange={(e) => setName(e.target.value)} id="med-name" required className="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm focus:border-brand-400 focus:ring-1 focus:ring-brand-400" />
+            <input value={name} onChange={(e) => setName(e.target.value)} id="med-name" required className="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm text-slate-600 focus:border-brand-400 focus:ring-1 focus:ring-brand-400" />
           </label>
 
-          <label className="text-sm text-slate-400 space-y-1">
+          <label className="text-sm text-slate-500 space-y-1">
             <span>Dosage</span>
             <input value={dosage} onChange={(e) => setDosage(e.target.value)} id="med-dosage" required className="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm focus:border-brand-400 focus:ring-1 focus:ring-brand-400" />
           </label>
@@ -69,7 +69,7 @@ export default function MedForm({ api, setMessage, loadMeds }) {
 
           <label className="text-sm text-slate-400 space-y-1">
             <span>Dosage Unit</span>
-            <select value={dosageUnit} onChange={(e) => setDosageUnit(e.target.value)} id="med-dosage-unit" className="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm focus:border-brand-400 focus:ring-1 focus:ring-brand-400">
+            <select value={dosageUnit} onChange={(e) => setDosageUnit(e.target.value)} id="med-dosage-unit" className="w-full rounded-lg border border-slate-800 bg-white text-slate-600 px-3 py-2 text-sm hover:border-brand-500 focus:border-brand-500 focus:ring-1 focus:ring-brand-500">
               <option value="">Select unit</option>
               <option value="mg">mg</option>
               <option value="ml">ml</option>
@@ -86,7 +86,7 @@ export default function MedForm({ api, setMessage, loadMeds }) {
 
           <label className="text-sm text-slate-400 space-y-1">
             <span>Frequency</span>
-            <input value={frequency} onChange={(e) => setFrequency(e.target.value)} id="med-frequency" placeholder="Daily" required className="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm focus:border-brand-400 focus:ring-1 focus:ring-brand-400" />
+            <input value={frequency} onChange={(e) => setFrequency(e.target.value)} id="med-frequency" placeholder="Daily" required className="w-full rounded-lg border border-slate-300 bg-slate-950 px-3 py-2 text-sm focus:border-brand-400 focus:ring-1 focus:ring-brand-400" />
           </label>
         </div>
 
