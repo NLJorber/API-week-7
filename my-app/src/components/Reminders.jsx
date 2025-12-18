@@ -48,7 +48,7 @@ export default function Reminders({ reminders, api, setMessage, loadReminders })
         </div>
         <label className="text-sm text-slate-400 space-y-1">
           <span>Due At</span>
-          <input value={due} onChange={(e) => setDue(e.target.value)} id="reminder-due" type="datetime-local" required className="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm focus:border-brand-400 focus:ring-1 focus:ring-brand-400" />
+          <input value={due} onChange={(e) => setDue(e.target.value)} id="reminder-due" type="datetime-local" required className="w-full rounded-lg border border-slate-800 bg-white text-slate-600 px-3 py-2 text-sm focus:border-brand-400 focus:ring-1 focus:ring-brand-400" />
         </label>
         <button type="submit" className="rounded-lg bg-gradient-to-r from-brand-400 to-brand-500 px-4 py-2 text-sm font-semibold text-slate-950 shadow hover:opacity-90">Create Reminder</button>
       </form>
