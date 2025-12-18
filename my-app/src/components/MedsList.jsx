@@ -41,11 +41,11 @@ export default function MedsList({ meds, api, setMessage, loadMeds }) {
             <div>
               <div className="font-semibold text-slate-100">{med.name}</div>
               <div className="text-xs text-slate-400">{med.dosage} • {med.frequency} • {med.timeToTake}</div>
-              {med.dosageAmount ? <div className="text-xs text-slate-500">Amount: {med.dosageAmount} {med.dosageUnit || ""}</div> : null}
+              {med.amount ? <div className="text-xs text-slate-500">Amount: {med.amount} {med.dosageUnit || ""}</div> : null}
               <div className="text-xs text-slate-500 mt-1">Taken: {med.takenCount ?? 0} | Skipped: {med.skippedCount ?? 0}</div>
               <div className="text-xs text-slate-500 mt-1">Last taken: {med.lastTakenAt ? new Date(med.lastTakenAt).toLocaleString() : "never"}</div>
             </div>
-            <span className="inline-flex items-center rounded-full border px-2 py-1 text-xs border-slate-700 text-slate-300">Qty: {med.quantity ?? 0}</span>
+            <span className="inline-flex items-center rounded-full border px-2 py-1 text-xs border-slate-700 text-slate-300">Qty: {med.inventory ?? 0}</span>
           </div>
           <div className="text-xs text-slate-400 mt-2">{med.notes || ""}</div>
           <div className="text-xs text-slate-500 mt-1">Profile: {med.profileId || "n/a"}</div>
