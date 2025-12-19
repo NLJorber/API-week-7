@@ -5,7 +5,7 @@ import Profile from "@/models/profile";
 
 export async function GET(_req, { params }) {
   await connectDB();
-  const { userId } = auth();
+  const { userId } = await auth();
   if (!userId) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   const profile = await Profile.findOne({ _id: params.id, userId });
   if (!profile) return NextResponse.json({ message: "Profile not found" }, { status: 404 });

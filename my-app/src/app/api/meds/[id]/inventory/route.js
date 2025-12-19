@@ -5,7 +5,7 @@ import Med from "@/models/med";
 
 export async function PATCH(req, { params }) {
   await connectDB();
-  const { userId } = auth();
+  const { userId } = await auth();
   if (!userId) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   const { amount } = await req.json();
   if (typeof amount !== "number") {
