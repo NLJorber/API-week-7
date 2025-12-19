@@ -5,7 +5,7 @@ import Med from "@/models/med";
 
 export async function POST(_req, { params }) {
   await connectDB();
-  const { userId } = auth();
+  const { userId } = await auth();
   if (!userId) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   const med = await Med.findOne({ _id: params.id, userId });
   if (!med) return NextResponse.json({ message: "Medication not found" }, { status: 404 });

@@ -4,10 +4,10 @@ import { NextResponse } from "next/server";
 const isApiRoute = createRouteMatcher(["/api/(.*)"]);
 
 // Minimal proxy: enforce auth on API by returning 401 JSON when unsigned.
-export default clerkMiddleware((auth, req) => {
+export default clerkMiddleware(async (auth, req) => {
   console.log("proxy hit:", req.nextUrl.pathname);
   if (isApiRoute(req)) {
-    const { userId } = auth();
+    const { userId } = await auth();
     console.log("proxy api userId", userId, "cookie", req.headers.get("cookie"));
     if (!userId) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });

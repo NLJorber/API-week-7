@@ -5,7 +5,7 @@ import Med from "@/models/med";
 
 export async function GET() {
   await connectDB();
-  const { userId } = auth();
+  const { userId } = await auth();
   console.log("API /api/meds GET userId", userId);
   if (!userId) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   const meds = await Med.find({ userId });
@@ -14,7 +14,7 @@ export async function GET() {
 
 export async function POST(req) {
   await connectDB();
-  const { userId } = auth();
+  const { userId } = await auth();
   console.log("API /api/meds POST userId", userId, "cookie:", req.headers.get("cookie"));
   if (!userId) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   const body = await req.json();

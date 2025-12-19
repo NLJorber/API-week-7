@@ -1,7 +1,7 @@
 "use client";
 import { useState, useCallback, useEffect } from "react";
 import MedForm from "./MedForm";
-import Reminders from "./Reminders";
+// import Reminders from "./Reminders";
 import MedsList from "./MedsList";
 import Messages from "./Messages";
 
@@ -62,7 +62,7 @@ export default function MainClient() {
     <div>
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         <MedForm api={api} setMessage={setMessage} loadMeds={loadMeds} />
-        <Reminders reminders={reminders} api={api} setMessage={setMessage} loadReminders={loadReminders} />
+        {/* <Reminders reminders={reminders} api={api} setMessage={setMessage} loadReminders={loadReminders} /> */}
       </div>
 
       <section className="mt-4 rounded-xl border border-slate-800 bg-slate-900/80 p-4 shadow-xl shadow-black/40">
