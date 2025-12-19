@@ -11,18 +11,18 @@ export default function MedsList({ meds, api, setMessage, loadMeds }) {
   async function performAction(action, id) {
     try {
       if (action === "delete") {
-        await api(`/${id}`, { method: "DELETE" });
+        await api(`/api/meds/${id}`, { method: "DELETE" });
         setMessage("Deleted", "success");
       } else if (action === "skip") {
-        await api(`/${id}/skip`, { method: "POST", body: { reason: "manual skip" } });
+        await api(`/api/meds/${id}/skip`, { method: "POST", body: { reason: "manual skip" } });
         setMessage("Marked skipped", "success");
       } else if (action === "taken") {
-        await api(`/meds/${id}/taken`, { method: "POST" });
+        await api(`/api/meds/${id}/taken`, { method: "POST" });
         setMessage("Marked taken", "success");
       } else if (action === "inventory") {
         const amount = Number(inventoryInputs[id]);
         if (Number.isNaN(amount)) return setMessage("Enter a number for inventory", "danger");
-        await api(`/meds/${id}/inventory`, { method: "PATCH", body: { amount } });
+        await api(`/api/meds/${id}/inventory`, { method: "PATCH", body: { amount } });
         setMessage("Inventory updated", "success");
       }
       loadMeds();

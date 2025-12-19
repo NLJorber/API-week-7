@@ -1,0 +1,13 @@
+import mongoose from "mongoose";
+
+const ProfileSchema = new mongoose.Schema(
+  {
+    userId: { type: String, required: true },
+    name: { type: String, required: true },
+    type: { type: String },
+    notes: { type: String }
+  },
+  { timestamps: true }
+);
+
+export default mongoose.models.Profile || mongoose.model("Profile", ProfileSchema);
