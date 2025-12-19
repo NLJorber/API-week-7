@@ -20,7 +20,7 @@ export default function MainClient() {
   }, []);
 
   const api = useCallback(async (path, { method = "GET", body, headers = {} } = {}) => {
-    const opts = { method, headers: { ...headers } };
+    const opts = { method, headers: { ...headers }, credentials: "include" };
     if (body !== undefined) {
       opts.body = typeof body === "string" ? body : JSON.stringify(body);
       opts.headers["Content-Type"] = "application/json";
@@ -37,7 +37,7 @@ export default function MainClient() {
 
   const loadMeds = useCallback(async () => {
     try {
-      const list = await api("/");
+      const list = await api("/api/meds");
       setMeds(list);
     } catch (err) {
       setMessage(err.message, "danger");
@@ -46,7 +46,7 @@ export default function MainClient() {
 
   const loadReminders = useCallback(async () => {
     try {
-      const list = await api("/reminders");
+      const list = await api("/api/reminders");
       setReminders(list);
     } catch (err) {
       setMessage(err.message, "danger");

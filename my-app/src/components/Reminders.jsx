@@ -11,7 +11,7 @@ export default function Reminders({ reminders, api, setMessage, loadReminders })
     const dueAt = due ? new Date(due).toISOString() : null;
     const body = { message, medId: medId || undefined, dueAt };
     try {
-      await api("/reminders", { method: "POST", body });
+      await api("/api/reminders", { method: "POST", body });
       setMessage("Reminder created", "success");
       loadReminders();
     } catch (err) {
@@ -21,8 +21,8 @@ export default function Reminders({ reminders, api, setMessage, loadReminders })
 
   async function performAction(action, id) {
     try {
-      if (action === "dismiss") await api(`/reminders/${id}/dismiss`, { method: "POST" });
-      else if (action === "mark-due") await api(`/reminders/${id}/mark-due`, { method: "POST" });
+      if (action === "dismiss") await api(`/api/reminders/${id}/dismiss`, { method: "POST" });
+      else if (action === "mark-due") await api(`/api/reminders/${id}/mark-due`, { method: "POST" });
       loadReminders();
     } catch (err) {
       setMessage(err.message, "danger");

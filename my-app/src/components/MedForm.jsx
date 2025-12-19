@@ -28,10 +28,10 @@ export default function MedForm({ api, setMessage, loadMeds }) {
     };
     try {
       if (id) {
-        await api(`/${id}`, { method: "PUT", body });
+        await api(`/api/meds/${id}`, { method: "PUT", body });
         setMessage("Medication updated", "success");
       } else {
-        await api("/", { method: "POST", body });
+        await api("/api/meds", { method: "POST", body });
         setMessage("Medication created", "success");
       }
       loadMeds();
